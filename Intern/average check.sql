@@ -1,0 +1,2 @@
+select toStartOfMonth(buy_date::date)::date AS month, AVG(check_amount) as avg_check, quantileExactExclusive(0.5)(check_amount) as median_check from default.view_checks
+group by toStartOfMonth(buy_date::date)
