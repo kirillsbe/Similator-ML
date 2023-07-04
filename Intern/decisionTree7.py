@@ -104,3 +104,29 @@ class DecisionTreeRegressor:
             # Forming JSON for current node
             json_node = f'{{"feature": {node.feature}, "threshold": {node.threshold}, "n_samples": {node.n_samples}, "mse": {round(node.mse,2)}, "left": {self._as_json(node.left)}, "right": {self._as_json(node.right)}}}'
             return json_node
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Predict regression target for X.
+
+        Parameters
+        ----------
+        X : array-like, shape (n_samples, n_features)
+            The input samples.
+
+        Returns
+        -------
+        y : array of shape (n_samples,)
+            The predicted values.
+        """
+        return np.array([self._predict_one_sample(features) for features in X])
+
+    def _predict_one_sample(self, features: np.ndarray) -> int:
+        """Predict the target value of a single sample."""
+        node = self.tree_
+        while node.left is not None and node.right is not None:
+            if features[node.feature] <= node.threshold:
+                node = node.left
+            else:
+                node = node.right
+        return node.value
